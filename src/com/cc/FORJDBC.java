@@ -14,15 +14,10 @@ public String username;
 public String password;
 public Date createdate;
 public Date enddate;
+public String status;
     public FORJDBC() {
     }
-    public FORJDBC(int id, String username, String password, Date createdate, Date enddate) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.createdate = createdate;
-        this.enddate = enddate;
-    }
+
 
     public int getId() {
         return id;
@@ -64,14 +59,23 @@ public Date enddate;
         this.enddate = enddate;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
-        return "com.cc.FORJDBC{" +
+        return "FORJDBC{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", createdate=" + createdate +
                 ", enddate=" + enddate +
+                ", status='" + status + '\'' +
                 '}';
     }
 }

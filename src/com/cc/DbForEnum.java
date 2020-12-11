@@ -22,9 +22,8 @@ public class DbForEnum {
     public DbForEnum() {
     }
 
-    public  HashMap<String, ArrayList<String>> getEnum() {
-        HashMap<String, ArrayList<String>> stringStringHashMap=null;
-
+    public  HashMap<HashMap<Integer, String>, ArrayList<String>> getEnum() {
+        HashMap<HashMap<Integer, String>, ArrayList<String>> stringStringHashMap=null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection(url, username, password);
@@ -33,11 +32,12 @@ public class DbForEnum {
                     "FROM\n" +
                     "information_schema.COLUMNS\n" +
                     "WHERE\n" +
-                    "TABLE_SCHEMA = 'woniu_thirdstage_project'\n" +
+                    "TABLE_SCHEMA = 'newframework'\n" +
                     "AND DATA_TYPE = 'enum'\n" +
-                    "AND table_name='t_claims'");
+                    "AND table_name='forjdbc'");
             ResultSet execute = preparedStatement.executeQuery();
        stringStringHashMap = new HashMap<>();
+            HashMap<Integer, String> integerStringHashMap = new HashMap<>();
             String s = "'...'";
             Pattern compile = Pattern.compile(s);
             Matcher matcher = null;
@@ -51,7 +51,10 @@ public class DbForEnum {
 //                    System.out.println("+++");
                     strings.add(matcher.group().substring(1, matcher.group().length() - 1));
                 }
-                stringStringHashMap.put(execute.getString(1), strings);
+                HashMap<Integer, String> integerStringHashMap1 = new HashMap<>();
+                integerStringHashMap1.put(execute.getInt(3),execute.getString(1));
+stringStringHashMap.put(integerStringHashMap1, strings);
+//                stringStringHashMap.put(integerStringHashMap.put(,execute.getString(1)), strings);
 //                System.out.println("----"+execute.getString(1)+strings);
             }
 //            for (Map.Entry<String, ArrayList<String>>  u:

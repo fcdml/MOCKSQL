@@ -24,7 +24,14 @@ public class testDBUitls {
 //      System.out.println(2222);
 //        }
 //        Random random = new Random();
-//        int i = random.nextInt(10);
+
+//        for (int j = 0; j <100; j++) {
+//            int i = random.nextInt(10);
+//            System.out.println(i);
+//            if (i==10){
+//                System.out.println("=========================================================================");
+//            }
+//        }
 //        String[] strings= {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
 //
 //        for (int j = 0; j <20 ; j++) {
@@ -49,16 +56,16 @@ public class testDBUitls {
 //            System.out.println(split[i]);
 //        }
 //        System.out.println(FORJDBC.class.getName());
-        DbForEnum dbForEnum = new DbForEnum();
-        HashMap<String, ArrayList<String>> anEnum = dbForEnum.getEnum();
-        for (Map.Entry<String, ArrayList<String>>  u:
-                anEnum.entrySet()) {
-                System.out.println(u.getKey());
-                System.out.println("size-----"+u.getValue().size());
-                for (int j = 0; j <u.getValue().size() ; j++) {
-                    System.out.println("enum--------->"+u.getValue().get(j));
-                }
-            }
-
+//      /  DbForEnum dbForEnum = new DbForEnum();
+//        HashMap<String, ArrayList<String>> anEnum = dbForEnum.getEnum();
+//        for (Map.Entry<String, ArrayList<String>>  u:
+//                anEnum.entrySet()) {
+//                System.out.println(u.getKey());
+//                System.out.println("size-----"+u.getValue().size());
+//                for (int j = 0; j <u.getValue().size() ; j++) {
+//                    System.out.println("enum--------->"+u.getValue().get(j));
+//                }
+//            }
+        DBUitls dbUitls = new DBUitls(FORJDBC.class, 20);
     }
 }
