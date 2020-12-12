@@ -1,5 +1,7 @@
 package com.cc;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.*;
@@ -25,6 +27,8 @@ public class DBUitls {
         this.aclass = aclass;
         this.num = num;
         try {
+            System.out.println("开始生成随机数据....");
+            java.util.Date date1 = new java.util.Date();
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection(url, username, password);
             Date date = new Date((new java.util.Date()).getTime());
@@ -34,8 +38,8 @@ public class DBUitls {
             String[] strings = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
             Random random = new Random();
             int q = 0;// declaredFields数组下表
-            DbForEnum dbForEnum = new DbForEnum();
-            HashMap<HashMap<Integer, String>, ArrayList<String>> allEnum = dbForEnum.getEnum();
+            DbForFieldDefinition dbForEnum = new DbForFieldDefinition();
+            ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition();
             boolean hh=false;
             PreparedStatement preparedStatementNum = connection.prepareStatement("select count(*) from forjdbc");
             ResultSet allnum=preparedStatementNum.executeQuery();
@@ -45,16 +49,23 @@ public class DBUitls {
                 System.out.println(anInt);
             }
             for (int j = anInt+1; j <= anInt+num; j++) {
-                System.out.println("j---->"+j);
+//                System.out.println("j---->"+j);
                 for (int i = 1; i <= varnum; i++) {
-                    for (Map.Entry<HashMap<Integer, String>, ArrayList<String>> s:
-                         allEnum.entrySet()) {
-                        if(s.getKey().containsKey(i)){
-                            Random random1 = new Random();
-                            preparedStatement.setString(i,s.getValue().get(random1.nextInt(s.getValue().size())));
-                            hh=true;
-                            break;
-                        }
+                    for (JSONObject s:
+                         allFieldDefinition) {
+                        if (s.getIntValue("ordinalPosition")==i&&"enum".equals(s.getString("dataType")))
+                        {
+                                Random random1 = new Random();
+                                ArrayList<String> columnType =(ArrayList<String>)s.get("columnType");
+                                try {
+                                    preparedStatement.setString(i,columnType.get(random1.nextInt(columnType.size())));
+                                    hh=true;
+                                } catch (SQLException throwables) {
+                                    System.out.println("60行出现异常");
+                                    throwables.printStackTrace();
+                                }
+                                break;
+                    }
                     }
                     if (hh){
                         hh=false;
@@ -82,12 +93,15 @@ public class DBUitls {
                         continue;
                     }
                 }
-                System.out.println("j====="+j);
+//                System.out.println("j====="+j);
                 preparedStatement.executeUpdate();
-                System.out.println("j((((("+j);
+//                System.out.println("j((((("+j);
 //                for ()
-            }
 
+            }
+            java.util.Date date2 = new java.util.Date();
+
+            System.out.println("生成数据完成---共生成"+num+"条数据---"+"耗时---"+(date2.getTime()-date1.getTime())+"毫秒");
             preparedStatement.close();
             connection.close();
         } catch (ClassNotFoundException e) {
@@ -95,10 +109,7 @@ public class DBUitls {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
-
     }
-
 //    static {
 //        try {
 //            Class.forName("com.mysql.cj.jdbc.Driver");

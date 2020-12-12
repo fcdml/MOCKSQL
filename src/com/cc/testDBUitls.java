@@ -56,7 +56,7 @@ public class testDBUitls {
 //            System.out.println(split[i]);
 //        }
 //        System.out.println(FORJDBC.class.getName());
-//      /  DbForEnum dbForEnum = new DbForEnum();
+//      /  DbForFieldDefinition dbForEnum = new DbForFieldDefinition();
 //        HashMap<String, ArrayList<String>> anEnum = dbForEnum.getEnum();
 //        for (Map.Entry<String, ArrayList<String>>  u:
 //                anEnum.entrySet()) {
@@ -66,6 +66,6 @@ public class testDBUitls {
 //                    System.out.println("enum--------->"+u.getValue().get(j));
 //                }
 //            }
-        DBUitls dbUitls = new DBUitls(FORJDBC.class, 20);
+        DBUitls dbUitls = new DBUitls(FORJDBC.class, 1000);
     }
 }
