@@ -44,14 +44,14 @@ public class DbForFieldDefinition {
             allJsonObject = new ArrayList<>();
             while (execute.next()) {
             JSONObject    jsonObject = new JSONObject(new LinkedHashMap());
-                System.out.println(execute.getString(5));
+//                System.out.println(execute.getString(5));
                 jsonObject.put("columnName",execute.getString(1));
                jsonObject.put("ordinalPosition",execute.getInt(2));
                jsonObject.put("dataType",execute.getString(3));
                jsonObject.put("characterMaximumLength",execute.getInt(4));
                jsonObject.put("columnType",execute.getString(5));
                 if (execute.getString(5).contains("enum")){
-                    System.out.println("======");
+//                    System.out.println("======");
                     ArrayList<String> strings = new ArrayList<>();
 //                System.out.println("====="+execute.getString(2));
                     matcher = compile.matcher(execute.getString(5));
@@ -59,13 +59,12 @@ public class DbForFieldDefinition {
 //                    System.out.println("+++");
                         strings.add(matcher.group().substring(1, matcher.group().length() - 1));
                     }
-                    System.out.println(strings);
+//                    System.out.println(strings);
                     jsonObject.put("columnType",strings);
                 }
                 allJsonObject.add(jsonObject);
 
             }
-
             preparedStatement.close();
             connection.close();
         } catch (ClassNotFoundException e) {

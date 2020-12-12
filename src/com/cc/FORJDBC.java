@@ -17,8 +17,6 @@ public Date enddate;
 public String status;
     public FORJDBC() {
     }
-
-
     public int getId() {
         return id;
     }

@@ -1,19 +1,17 @@
 package com.cc;
 
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
- * @Classname com.cc.testDBUitls
+ * @Classname com.cc.testAutoSQL
  * @Description TODO
  * @Date 2020/12/11 21:46
  * @Created by 2413776263@qq.com
  */
-public class testDBUitls {
+public class testAutoSQL {
     public static void main(String[] args) throws ClassNotFoundException {
-//        com.cc.DBUitls dbUitls = new com.cc.DBUitls(com.cc.FORJDBC.class,6);
+//        com.cc.AutoSQL autoSQL = new com.cc.AutoSQL(com.cc.FORJDBC.class,6);
 //        Field[] declaredFields1 = Class.forName("com.cc.FORJDBC").getDeclaredFields();
 //        Field[] declaredFields = Class.forName("com.").getDeclaredFields();
 //        System.out.println(Arrays.toString(declaredFields));
@@ -66,7 +64,17 @@ public class testDBUitls {
 //                    System.out.println("enum--------->"+u.getValue().get(j));
 //                }
 //            }
-        DBUitls dbUitls = new DBUitls(FORJDBC.class, 10);
-        dbUitls.AutoInsert();
+//        AutoSQL autoSQL = new AutoSQL("forjdbc", 10);
+//        autoSQL.AutoInsert();
+//        TreeMap<Integer, String> integerStringTreeMap = new TreeMap<>();
+//        integerStringTreeMap.put(2,"hjfdui");
+//        integerStringTreeMap.put(1,"nfdjkf");
+//        integerStringTreeMap.put(3,"nfgdjkghn");
+//        for (Map.Entry s:
+//             integerStringTreeMap.entrySet()) {
+//            System.out.println(s.getKey()+"-----"+s.getValue());
+//        }
+        AutoSQL forjdbc = new AutoSQL("forjdbc", 10);
+        forjdbc.AutoInsert("createdate","enddate","afterdate");
     }
 }

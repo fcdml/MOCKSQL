@@ -1,12 +1,11 @@
 package com.cc;
 
+import com.alibaba.fastjson.JSONObject;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @Classname TimeUtils
@@ -62,7 +61,54 @@ public class TimeUtils {
 ////        String print = DateTimeFormat.forPattern("yyyy-MM-dd").print(dateTime1);
 //        return DateTime.parse(randomYMD + getHMS(), format);
 //    }
-
+    public static TreeMap<Integer, HashMap<String,DateTime>> getSortDateTime(String dateField1,String dateField2,String dateField3){
+        TreeMap<Integer, HashMap<String, DateTime>> integerHashMapTreeMap = new TreeMap<>();
+        //Integer 存该字段所在下标
+        DbForFieldDefinition dbForEnum = new DbForFieldDefinition();
+        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition();
+        ArrayList<DateTime> dateTimes = new ArrayList<>();
+        dateTimes.add(getDateTime());
+        dateTimes.add(getDateTime());
+        dateTimes.add(getDateTime());
+        ListSort(dateTimes);
+        for (JSONObject s:
+                allFieldDefinition) {
+            if (s.getString("columnName").equals(dateField1)) {
+                Integer ordinalPosition = s.getInteger("ordinalPosition");
+                HashMap<String, DateTime> stringDateTimeHashMap = new HashMap<>();
+                stringDateTimeHashMap.put(dateField1, dateTimes.get(0));
+                integerHashMapTreeMap.put(ordinalPosition, stringDateTimeHashMap);
+            }
+            if (s.getString("columnName").equals(dateField2)) {
+                Integer ordinalPosition = s.getInteger("ordinalPosition");
+                HashMap<String, DateTime> stringDateTimeHashMap = new HashMap<>();
+                stringDateTimeHashMap.put(dateField2, dateTimes.get(1));
+                integerHashMapTreeMap.put(ordinalPosition, stringDateTimeHashMap);
+            }
+            if (s.getString("columnName").equals(dateField3)) {
+                Integer ordinalPosition = s.getInteger("ordinalPosition");
+                HashMap<String, DateTime> stringDateTimeHashMap = new HashMap<>();
+                stringDateTimeHashMap.put(dateField3,  dateTimes.get(2));
+                integerHashMapTreeMap.put(ordinalPosition, stringDateTimeHashMap);
+            }
+        }
+        System.out.println("999"+integerHashMapTreeMap);
+        return  integerHashMapTreeMap;
+    }
+    private static void ListSort(List<DateTime> list) {
+        {    //排序方法
+            Collections.sort(list, new Comparator<DateTime>() {
+                @Override
+                public int compare(DateTime o1, DateTime o2) {
+                    if (o1.getMillis()>o2.getMillis()){
+                        return 1;
+                    }else {
+                        return -1;
+                    }
+                }
+            });
+        }
+    }
     public static Boolean isLeapYear(int year ){
         if (year%4==0&&year%100!=0||year%400==0){
             return true;
@@ -89,9 +135,14 @@ public class TimeUtils {
         int randomSeconds= new Random().nextInt(60);
         return " "+randomHour+":"+randomMinutes+":"+randomSeconds;
     }
-
 //    public static void main(String[] args) {
-//        Random random = new Random();
-//
+//        ArrayList<DateTime> dateTimes = new ArrayList<>();
+//        dateTimes.add(getDateTime());
+//        dateTimes.add(getDateTime());
+//        dateTimes.add(getDateTime());
+//        ListSort(dateTimes);
+//        System.out.println(dateTimes.get(0));
+//        System.out.println(dateTimes.get(1));
+//        System.out.println(dateTimes.get(2));
 //    }
 }
