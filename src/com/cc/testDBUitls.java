@@ -66,6 +66,7 @@ public class testDBUitls {
 //                    System.out.println("enum--------->"+u.getValue().get(j));
 //                }
 //            }
-        DBUitls dbUitls = new DBUitls(FORJDBC.class, 1000);
+        DBUitls dbUitls = new DBUitls(FORJDBC.class, 10);
+        dbUitls.AutoInsert();
     }
 }
