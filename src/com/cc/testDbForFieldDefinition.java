@@ -1,10 +1,7 @@
 package com.cc;
 
 import com.alibaba.fastjson.JSONObject;
-
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * @Classname testDbForFieldDefinition

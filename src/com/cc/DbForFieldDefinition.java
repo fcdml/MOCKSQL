@@ -1,16 +1,11 @@
 package com.cc;
-
 import com.alibaba.fastjson.JSONObject;
-
-import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 /**
  * @Classname DbForFieldDefinition
  * @Description TODO
@@ -18,9 +13,6 @@ import java.util.regex.Pattern;
  * @Created by 2413776263@qq.com
  */
 public class DbForFieldDefinition {
-    private static String url = "jdbc:mysql://localhost:3306/newframework?useSSL=false&characterEncoding=utf8&serverTimeZone=GMT+8";
-    private static String username = "root";
-    private static String password = "mysql9614";
     public DbForFieldDefinition() {
     }
     public ArrayList<JSONObject> getAllFieldDefinition() {
@@ -33,7 +25,7 @@ public class DbForFieldDefinition {
                     "FROM\n" +
                     "information_schema.COLUMNS\n" +
                     "WHERE\n" +
-                    "TABLE_SCHEMA = 'newframework'\n" +
+                    "TABLE_SCHEMA = 'mocksql'\n" +
                     "AND table_name='forjdbc'");
             ResultSet execute = preparedStatement.executeQuery();
             HashMap<Integer, String> integerStringHashMap = new HashMap<>();
@@ -63,10 +55,8 @@ public class DbForFieldDefinition {
                     jsonObject.put("columnType",strings);
                 }
                 allJsonObject.add(jsonObject);
-
             }
-            preparedStatement.close();
-            connection.close();
+            SQLUtils.release(connection,preparedStatement);
         } catch (ClassNotFoundException e) {
             System.out.println("数据库的驱动校验失败!");
         } catch (SQLException throwables) {

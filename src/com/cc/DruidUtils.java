@@ -1,9 +1,6 @@
 package com.cc;
 
 import com.alibaba.druid.pool.DruidDataSource;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +22,7 @@ public class DruidUtils {
         Properties props = new Properties();
         try {
             String driverClassName = "com.mysql.cj.jdbc.Driver";
-            String jdbcUrl ="jdbc:mysql://localhost:3306/newframework?useSSL=false&characterEncoding=utf8&serverTimeZone=GMT+8";
+            String jdbcUrl ="jdbc:mysql://localhost:3306/mocksql?useSSL=false&characterEncoding=utf8&serverTimeZone=GMT+8";
             String username ="root";
             String password = "mysql9614";
             int initialSize = 10;

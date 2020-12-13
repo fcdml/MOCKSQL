@@ -1,11 +1,6 @@
 package com.cc;
-
 import com.alibaba.fastjson.JSONObject;
-
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Random;
-
 /**
  * @Classname EnumUtils
  * @Description TODO

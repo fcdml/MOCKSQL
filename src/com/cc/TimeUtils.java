@@ -107,9 +107,9 @@ public class TimeUtils {
                 }
             }
         }
-        System.out.println("-----"+dateTimes);
+//        System.out.println("-----"+dateTimes);
         ListSort(dateTimes);
-        System.out.println("++++++"+dateTimes);
+//        System.out.println("++++++"+dateTimes);
         int i=0;
         for (String u:dateFields){
             for (JSONObject s:
@@ -124,7 +124,7 @@ public class TimeUtils {
             }
             i++;
         }
- System.out.println(integerHashMapTreeMapDateTimeAndDate);
+// System.out.println(integerHashMapTreeMapDateTimeAndDate);
         return integerHashMapTreeMapDateTimeAndDate;
     }
     public static TreeMap<Integer, HashMap<String,DateTime>> getSortDateTime(String[] dateFields){

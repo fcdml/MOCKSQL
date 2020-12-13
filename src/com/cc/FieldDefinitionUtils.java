@@ -14,6 +14,11 @@ public class FieldDefinitionUtils {
     public  static String getDataType(int i){
         DbForFieldDefinition dbForEnum = new DbForFieldDefinition();
         ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition();
+        for (int j = 0; j <allFieldDefinition.size() ; j++) {
+            if (allFieldDefinition.get(j).getInteger("ordinalPosition")==i){
+                return allFieldDefinition.get(j).getString("dataType");
+            }
+        }
         String typeName=(String)allFieldDefinition.get(i-1).get("dataType");
         return typeName;
     }
@@ -32,7 +37,11 @@ public class FieldDefinitionUtils {
     public  static String getColumnName(int i){
         DbForFieldDefinition dbForEnum = new DbForFieldDefinition();
         ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition();
-        String typeName=(String)allFieldDefinition.get(i-1).get("columnName");
-        return typeName;
+        for (int j = 0; j <allFieldDefinition.size() ; j++) {
+            if (allFieldDefinition.get(j).getInteger("ordinalPosition")==i){
+                return allFieldDefinition.get(j).getString("columnName");
+            }
+        }
+        return null;
     }
 }

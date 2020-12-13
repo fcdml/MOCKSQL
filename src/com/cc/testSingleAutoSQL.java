@@ -1,17 +1,14 @@
 package com.cc;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 /**
- * @Classname com.cc.testAutoSQL
+ * @Classname com.cc.testSingleAutoSQL
  * @Description TODO
  * @Date 2020/12/11 21:46
  * @Created by 2413776263@qq.com
  */
-public class testAutoSQL {
+public class testSingleAutoSQL {
     public static void main(String[] args) throws ClassNotFoundException {
-//        com.cc.AutoSQL autoSQL = new com.cc.AutoSQL(com.cc.FORJDBC.class,6);
+//        com.cc.AutoSingleSQL autoSQL = new com.cc.AutoSingleSQL(com.cc.FORJDBC.class,6);
 //        Field[] declaredFields1 = Class.forName("com.cc.FORJDBC").getDeclaredFields();
 //        Field[] declaredFields = Class.forName("com.").getDeclaredFields();
 //        System.out.println(Arrays.toString(declaredFields));
@@ -64,7 +61,7 @@ public class testAutoSQL {
 //                    System.out.println("enum--------->"+u.getValue().get(j));
 //                }
 //            }
-//        AutoSQL autoSQL = new AutoSQL("forjdbc", 10);
+//        AutoSingleSQL autoSQL = new AutoSingleSQL("forjdbc", 10);
 //        autoSQL.AutoInsert();
 //        TreeMap<Integer, String> integerStringTreeMap = new TreeMap<>();
 //        integerStringTreeMap.put(2,"hjfdui");
@@ -74,8 +71,8 @@ public class testAutoSQL {
 //             integerStringTreeMap.entrySet()) {
 //            System.out.println(s.getKey()+"-----"+s.getValue());
 //        }
-        AutoSQL forjdbc = new AutoSQL("forjdbc", 10000);
-        forjdbc.AutoInsert("createdate","enddate","afterdate","aa","bb","cc","dd");
+        AutoSingleSQL forjdbc = new AutoSingleSQL("forjdbc", 10000);
+        forjdbc.autoInsertS("createdate","enddate","afterdate","aa","bb","cc","dd");
 //        fun(1);
 //        System.out.print("\n");
 //        fun(1,2,3);
