@@ -27,7 +27,7 @@ public class DbForFieldDefinition {
         ArrayList<JSONObject> allJsonObject =null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection(url, username, password);
+            Connection connection= DruidUtils.getConnection();;
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT\n" +
                     "COLUMN_NAME  ename,ORDINAL_POSITION eposition,DATA_TYPE etype,CHARACTER_MAXIMUM_LENGTH eCMaxnum,COLUMN_TYPE etype\n" +
                     "FROM\n" +
@@ -44,7 +44,7 @@ public class DbForFieldDefinition {
             allJsonObject = new ArrayList<>();
             while (execute.next()) {
             JSONObject    jsonObject = new JSONObject(new LinkedHashMap());
-//                System.out.println(execute.getString(5));
+//                System.out.println(execute.getString(1));
                 jsonObject.put("columnName",execute.getString(1));
                jsonObject.put("ordinalPosition",execute.getInt(2));
                jsonObject.put("dataType",execute.getString(3));

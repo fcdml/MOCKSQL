@@ -74,7 +74,17 @@ public class testAutoSQL {
 //             integerStringTreeMap.entrySet()) {
 //            System.out.println(s.getKey()+"-----"+s.getValue());
 //        }
-        AutoSQL forjdbc = new AutoSQL("forjdbc", 10);
-        forjdbc.AutoInsert("createdate","enddate","afterdate");
+        AutoSQL forjdbc = new AutoSQL("forjdbc", 10000);
+        forjdbc.AutoInsert("createdate","enddate","afterdate","aa","bb","cc","dd");
+//        fun(1);
+//        System.out.print("\n");
+//        fun(1,2,3);
+//        System.out.print("\n");
+//        fun(1,2,3,4);
+    }
+    public static void fun(int ... args){
+        for(int i = 0; i < args.length; i++){
+            System.out.print(args[i]+"、");
+        }
     }
 }

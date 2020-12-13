@@ -1,12 +1,16 @@
 package com.cc;
+import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.fastjson.JSONObject;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
+
+import static com.cc.FieldDefinitionUtils.getColumnName;
 
 /**
  * @Classname com.cc.AutoSQL
@@ -15,6 +19,7 @@ import java.util.*;
  * @Created by 2413776263@qq.com
  */
 public class AutoSQL {
+    private static DruidDataSource dataSource = null;  // druid数据源
     private static String url = "jdbc:mysql://localhost:3306/newframework?useSSL=false&characterEncoding=utf8&serverTimeZone=GMT+8";
     private static String username = "root";
     private static String password = "mysql9614";
@@ -23,7 +28,6 @@ public class AutoSQL {
     public AutoSQL(String tableName, Integer num) {
         this.tableName = tableName;
         this.num = num;
-
     }
 
     //TODO 写私有方法防止外部调用
@@ -34,12 +38,12 @@ public class AutoSQL {
         Connection connection =null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(url, username, password);
+            connection = DruidUtils.getConnection();
         } catch (ClassNotFoundException e) {
             System.out.println("数据库驱动加载失败");
             e.printStackTrace();
-        } catch (SQLException throwables) {
-            System.out.println("连接数据库异常 请检查 数据库名称 用户名 密码");
+        } catch (Exception throwables) {
+            System.out.println("Method:getDBConnection 未知异常");
             throwables.printStackTrace();
         }
        return  connection;
@@ -152,10 +156,16 @@ public class AutoSQL {
             throwables.printStackTrace();
         }
     }
-    public void AutoInsert(String dateField1,String dateField2,String dateField3){
-        if (dateField1==null||dateField2==null||dateField3==null){
-            System.out.println("三个参数需要全部输入");
-            return;
+    public void AutoInsert(String ... dateFields){
+        //参数放在list 通过调用contains 判断是否包含某元素 主要用在if ("datetime".equals(typeName)||"date".equals(typeName))
+        // 加强if 判断 不然下面无排序要的日期也无法走通
+        ArrayList<String> temporaryList = new ArrayList<>();
+        for (String s:dateFields){
+            if (s==null){
+                System.out.println("三个参数需要全部输入");
+                return;
+            }
+            temporaryList.add(s);
         }
         try{
             System.out.println("开始生成随机数据....");
@@ -175,7 +185,12 @@ public class AutoSQL {
             int q = 0;// declaredFields数组下表
             boolean hh=false;
             int maxLine = getMaxLine(tableName);
+            int testDateTimesNum=0;
             for (int j = maxLine+1; j <= maxLine+num; j++) {
+                Boolean datetimeFlagX=false;
+                Boolean dateFlagX=false;
+                TreeMap<Integer, HashMap<String, DateTime>> sortDateTime = TimeUtils.getSortDateOrDateTime(dateFields);
+                ArrayList<DateTime> testDateTimes = new ArrayList<>();
                 for (int i = 1; i <= tableFieldNum; i++) {
                     String typeName=FieldDefinitionUtils.getDataType(i);
                     Boolean anEnum = EnumUtils.isEnum(i);
@@ -202,27 +217,51 @@ public class AutoSQL {
                         preparedStatement.setString(i,VarCharUtils.getRandomString(6));
                         continue;
                     }
-                    if ("datetime".equals(typeName)){
-                        Boolean datetimeFlag=false;
-                        TreeMap<Integer, HashMap<String, DateTime>> sortDateTime = TimeUtils.getSortDateTime(dateField1, dateField2, dateField3);
-                        for (Map.Entry s:
-                        sortDateTime.entrySet()) {
-                            if (s.getKey().equals(i)){
-                                HashMap<String, DateTime> value = (HashMap<String, DateTime>)s.getValue();
-                                System.out.println(new Date(value.get(FieldDefinitionUtils.getColumnName(i)).getMillis()));
-                                preparedStatement.setDate(i,new Date(value.get(FieldDefinitionUtils.getColumnName(i)).getMillis()));
-                                datetimeFlag=true;
+                    if ("datetime".equals(typeName)&&temporaryList.contains(getColumnName(i))||"date".equals(typeName)&&temporaryList.contains(getColumnName(i))){
+                        Boolean  temporaryFlag=false;
+                        for (String df:
+                             dateFields) {
+                            DateTime ii=null;
+                            for ( Map.Entry s:sortDateTime.entrySet()) {
+                                if (s.getKey().equals(i)){
+                                    HashMap<String, DateTime> value = (HashMap<String, DateTime>)s.getValue();
+                                    testDateTimes.add(value.get(getColumnName(i)));
+//                                             System.out.println("value----->"+value);
+                                             if ("datetime".equals(typeName)){
+                                                 preparedStatement.setTimestamp(i,new Timestamp(value.get(getColumnName(i)).getMillis()));
+//                                                 System.out.println("qqqqqqqqqqqq"+(new Timestamp(value.get(FieldDefinitionUtils.getColumnName(i)).getMillis())));
+                                                 datetimeFlagX=true;
+                                             }else if ("date".equals(typeName)){
+                                                 preparedStatement.setDate(i,new Date(value.get(getColumnName(i)).getMillis()));
+                                                 dateFlagX=true;
+                                             }
+                                             temporaryFlag=true;
+                                             break;
+                                         }
+                            }
+                            if (temporaryFlag){
                                 break;
                             }
+
                         }
-                        sortDateTime.remove(i);
-                        if (datetimeFlag){
+                        if (temporaryFlag){
+                            temporaryFlag=false;
+                            continue;
+                        }
+                    }
+                    if ("datetime".equals(typeName)){
+                        System.out.println(2222);
+                        if (datetimeFlagX){
+                            System.out.println(3333);
                             continue;
                         }
                         preparedStatement.setDate(i,  new Date(TimeUtils.getDateTime().getMillis()));
                         continue;
                     }
                     if ("date".equals(typeName)){
+                        if (dateFlagX){
+                            continue;
+                        }
                         preparedStatement.setDate(i,  new Date(TimeUtils.getDate().getMillis()));
                         continue;
                     }
@@ -230,10 +269,26 @@ public class AutoSQL {
                         continue;
                     }
                 }
+                int tt=0;
+
+                DateTime max=testDateTimes.get(0);
+                for (int i = 0; i <testDateTimes.size() ; i++) {
+                    if (testDateTimes.get(i).getMillis()>max.getMillis()){
+                        tt++;
+                        max=testDateTimes.get(i);
+                    }
+                }
+                if (tt==testDateTimes.size()-1){
+                    testDateTimesNum++;
+                }
 //                System.out.println("j====="+j);
                 preparedStatement.executeUpdate();
 //                System.out.println("j((((("+j);
+                sortDateTime=null;
                 System.out.println("已生成编号为"+j+"的数据");
+            }
+            if (testDateTimesNum==num){
+                System.out.println("大小关系已建立");
             }
             java.util.Date dateEnd = new java.util.Date();
             System.out.println("生成数据完成---共生成"+num+"条数据---"+"耗时---"+(dateEnd.getTime()-dateStart.getTime())+"毫秒");
