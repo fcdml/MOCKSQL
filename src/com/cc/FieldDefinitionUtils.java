@@ -11,9 +11,9 @@ import java.util.ArrayList;
  * @Created by 2413776263@qq.com
  */
 public class FieldDefinitionUtils {
-    public  static String getDataType(int i){
+    public  static String getDataType(String tableName,int i){
         DbForFieldDefinition dbForEnum = new DbForFieldDefinition();
-        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition();
+        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition(tableName);
         for (int j = 0; j <allFieldDefinition.size() ; j++) {
             if (allFieldDefinition.get(j).getInteger("ordinalPosition")==i){
                 return allFieldDefinition.get(j).getString("dataType");
@@ -22,10 +22,10 @@ public class FieldDefinitionUtils {
         String typeName=(String)allFieldDefinition.get(i-1).get("dataType");
         return typeName;
     }
-    public  static ArrayList<String> getColumnType(int i){
+    public  static ArrayList<String> getColumnType(String tableName,int i){
         ArrayList<String> columnType =null;
         DbForFieldDefinition dbForEnum = new DbForFieldDefinition();
-        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition();
+        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition(tableName);
         for (JSONObject s: allFieldDefinition) {
             if (s.getIntValue("ordinalPosition")==i&&"enum".equals(s.getString("dataType"))){
                  columnType =(ArrayList<String>)s.get("columnType");
@@ -34,9 +34,9 @@ public class FieldDefinitionUtils {
         }
         return columnType;
     }
-    public  static String getColumnName(int i){
+    public  static String getColumnName(String tableName,int i){
         DbForFieldDefinition dbForEnum = new DbForFieldDefinition();
-        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition();
+        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition(tableName);
         for (int j = 0; j <allFieldDefinition.size() ; j++) {
             if (allFieldDefinition.get(j).getInteger("ordinalPosition")==i){
                 return allFieldDefinition.get(j).getString("columnName");

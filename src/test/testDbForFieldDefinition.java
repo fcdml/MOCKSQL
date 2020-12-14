@@ -1,6 +1,8 @@
-package com.cc;
+package test;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cc.DbForFieldDefinition;
+
 import java.util.ArrayList;
 
 /**
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 public class testDbForFieldDefinition {
     public static void main(String[] args) {
         DbForFieldDefinition dbForFieldDefinition = new DbForFieldDefinition();
-        ArrayList<JSONObject> anEnum = dbForFieldDefinition.getAllFieldDefinition();
+        ArrayList<JSONObject> anEnum = dbForFieldDefinition.getAllFieldDefinition("forjdbc");
      anEnum.forEach((e)->{
          if (e.getString("dataType").equals("enum")){
              System.out.println(e.get("columnType").getClass().getTypeName());

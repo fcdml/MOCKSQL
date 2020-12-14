@@ -25,12 +25,14 @@ public class AutoSingleSQL {
     }
     //TODO 需要从url中获取数据库名称
     public void autoInsertS(){
+        Connection connection =null;
+        PreparedStatement preparedStatement =null;
         try {
             System.out.println("开始生成随机数据....");
             java.util.Date date1 = new java.util.Date();
-            Connection connection = getDBConnection();
+            connection = getDBConnection();
             int tableFieldNum = getFieldNum(tableName);
-            String insertsql="insert into forjdbc values (";
+            String insertsql="insert into "+tableName+" values (";
             for (int i = 1; i <=tableFieldNum ; i++) {
                 if (i==tableFieldNum){
                     insertsql+="?)";
@@ -38,19 +40,20 @@ public class AutoSingleSQL {
                 }
                 insertsql+="?,";
             }
-            PreparedStatement preparedStatement = connection.prepareStatement(insertsql);
+       preparedStatement = connection.prepareStatement(insertsql);
             Random random = new Random();
             int q = 0;// declaredFields数组下表
             boolean hh=false;
             int maxLine = getMaxLine(tableName);
             for (int j = maxLine+1; j <= maxLine+num; j++) {
                 for (int i = 1; i <= tableFieldNum; i++) {
-                    String typeName=FieldDefinitionUtils.getDataType(i);
-                    Boolean anEnum = EnumUtils.isEnum(i);
+                    String typeName=FieldDefinitionUtils.getDataType(tableName,i);
+                    Boolean anEnum = EnumUtils.isEnum(tableName,i);
                     if (anEnum){
                         Random random1 = new Random();
-                        ArrayList<String> columnType =FieldDefinitionUtils.getColumnType(i);
+                        ArrayList<String> columnType =FieldDefinitionUtils.getColumnType(tableName,i);
                         try {
+                            System.out.println("-----"+columnType.size());
                             preparedStatement.setString(i,columnType.get(random1.nextInt(columnType.size())));
                             hh=true;
                         } catch (SQLException throwables) {
@@ -87,9 +90,10 @@ public class AutoSingleSQL {
             }
             java.util.Date date2 = new java.util.Date();
             System.out.println("生成数据完成---共生成"+num+"条数据---"+"耗时---"+(date2.getTime()-date1.getTime())+"毫秒");
-           SQLUtils.release(connection,preparedStatement);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }finally {
+            SQLUtils.release(connection,preparedStatement);
         }
     }
     public void autoInsertS(String ... dateFields){
@@ -103,12 +107,14 @@ public class AutoSingleSQL {
             }
             temporaryList.add(s);
         }
+        Connection connection =null;
+        PreparedStatement preparedStatement =null;
         try{
             System.out.println("开始生成随机数据....");
             java.util.Date dateStart = new java.util.Date();
-            Connection connection = getDBConnection();
+           connection = getDBConnection();
             int tableFieldNum = getFieldNum(tableName);
-            String insertsql="insert into forjdbc values (";
+            String insertsql="insert into "+tableName+" values (";
             for (int i = 1; i <=tableFieldNum ; i++) {
                 if (i==tableFieldNum){
                     insertsql+="?)";
@@ -116,7 +122,7 @@ public class AutoSingleSQL {
                 }
                 insertsql+="?,";
             }
-            PreparedStatement preparedStatement = connection.prepareStatement(insertsql);
+         preparedStatement = connection.prepareStatement(insertsql);
             Random random = new Random();
             int q = 0;// declaredFields数组下表
             boolean hh=false;
@@ -125,14 +131,14 @@ public class AutoSingleSQL {
             for (int j = maxLine+1; j <= maxLine+num; j++) {
                 Boolean datetimeFlagX=false;
                 Boolean dateFlagX=false;
-                TreeMap<Integer, HashMap<String, DateTime>> sortDateTime = TimeUtils.getSortDateOrDateTime(dateFields);
+                TreeMap<Integer, HashMap<String, DateTime>> sortDateTime = TimeUtils.getSortDateOrDateTime(tableName,dateFields);
                 HashMap<String, DateTime> testDateTimes = new HashMap<>();
                 for (int i = 1; i <= tableFieldNum; i++) {
-                    String typeName=FieldDefinitionUtils.getDataType(i);
-                    Boolean anEnum = EnumUtils.isEnum(i);
+                    String typeName=FieldDefinitionUtils.getDataType(tableName,i);
+                    Boolean anEnum = EnumUtils.isEnum(tableName,i);
                     if (anEnum){
                         Random random1 = new Random();
-                        ArrayList<String> columnType =FieldDefinitionUtils.getColumnType(i);
+                        ArrayList<String> columnType =FieldDefinitionUtils.getColumnType(tableName,i);
                         try {
                             preparedStatement.setString(i,columnType.get(random1.nextInt(columnType.size())));
                             hh=true;
@@ -153,7 +159,7 @@ public class AutoSingleSQL {
                         preparedStatement.setString(i,VarCharUtils.getRandomString(6));
                         continue;
                     }
-                    if ("datetime".equals(typeName)&&temporaryList.contains(getColumnName(i))||"date".equals(typeName)&&temporaryList.contains(getColumnName(i))){
+                    if ("datetime".equals(typeName)&&temporaryList.contains(getColumnName(tableName,i))||"date".equals(typeName)&&temporaryList.contains(getColumnName(tableName,i))){
                         Boolean  temporaryFlag=false;
                         for (String df:
                              dateFields) {
@@ -161,12 +167,12 @@ public class AutoSingleSQL {
                             for ( Map.Entry s:sortDateTime.entrySet()) {
                                 if (s.getKey().equals(i)){
                                     HashMap<String, DateTime> value = (HashMap<String, DateTime>)s.getValue();
-                                    testDateTimes.put(getColumnName(i),value.get(getColumnName(i)));
+                                    testDateTimes.put(getColumnName(tableName,i),value.get(getColumnName(tableName,i)));
                                              if ("datetime".equals(typeName)){
-                                                 preparedStatement.setTimestamp(i,new Timestamp(value.get(getColumnName(i)).getMillis()));
+                                                 preparedStatement.setTimestamp(i,new Timestamp(value.get(getColumnName(tableName,i)).getMillis()));
                                                  datetimeFlagX=true;
                                              }else if ("date".equals(typeName)){
-                                                 preparedStatement.setDate(i,new Date(value.get(getColumnName(i)).getMillis()));
+                                                 preparedStatement.setDate(i,new Date(value.get(getColumnName(tableName,i)).getMillis()));
                                                  dateFlagX=true;
                                              }
                                              temporaryFlag=true;
@@ -223,9 +229,10 @@ public class AutoSingleSQL {
             }
             java.util.Date dateEnd = new java.util.Date();
             System.out.println("生成数据完成---共生成"+num+"条数据---"+"耗时---"+(dateEnd.getTime()-dateStart.getTime())+"毫秒");
-             SQLUtils.release(connection,preparedStatement);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }finally {
+            SQLUtils.release(connection,preparedStatement);
         }
     }
 }

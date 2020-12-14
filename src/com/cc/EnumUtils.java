@@ -9,9 +9,9 @@ import java.util.ArrayList;
  */
 public class EnumUtils {
     // i:当前遍历到的字段下标
-    public static Boolean isEnum(int i){
+    public static Boolean isEnum(String tableName,int i){
         DbForFieldDefinition dbForEnum = new DbForFieldDefinition();
-        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition();
+        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition(tableName);
         String typeName=(String)allFieldDefinition.get(i-1).get("dataType");
 //                    System.out.println("typeName"+typeName);
         Boolean flag=false;

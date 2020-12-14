@@ -1,7 +1,10 @@
-package com.cc;
+package test;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * @Classname com.cc.testSingleAutoSQL
+ * @Classname test.testSingleAutoSQL
  * @Description TODO
  * @Date 2020/12/11 21:46
  * @Created by 2413776263@qq.com
@@ -38,7 +41,18 @@ public class testSingleAutoSQL {
 //            }
 //            System.out.println(u);
 //        }
-//        String s="'...'";
+        String s="'.{1,}'";
+        Pattern compile = Pattern.compile(s);
+        Matcher matcher = compile.matcher("enum('test','yy','中')");
+        while (matcher.find()){
+            String[] split = matcher.group().split(",");
+            for (int i = 0; i <split.length ; i++) {
+                System.out.println(split[i].substring(1,split[i].length()-1));
+            }
+//            System.out.println(matcher.group());
+        }
+
+//                String s="'...'";
 //        Pattern compile = Pattern.compile(s);
 //        Matcher matcher = compile.matcher("enum('转让中','已转让','持有中')");
 //        while (matcher.find()){
@@ -71,8 +85,8 @@ public class testSingleAutoSQL {
 //             integerStringTreeMap.entrySet()) {
 //            System.out.println(s.getKey()+"-----"+s.getValue());
 //        }
-        AutoSingleSQL forjdbc = new AutoSingleSQL("forjdbc", 10000);
-        forjdbc.autoInsertS("createdate","enddate","afterdate","aa","bb","cc","dd");
+//        AutoSingleSQL forjdbc = new AutoSingleSQL("forjdbc", 10000);
+//        forjdbc.autoInsertS("createdate","enddate","afterdate","aa","bb","cc","dd");
 //        fun(1);
 //        System.out.print("\n");
 //        fun(1,2,3);

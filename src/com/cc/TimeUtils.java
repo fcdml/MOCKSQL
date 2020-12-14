@@ -62,9 +62,9 @@ public class TimeUtils {
 //        return DateTime.parse(randomYMD + getHMS(), format);
 //    }
 
-    public static TreeMap<Integer, HashMap<String,DateTime>> getSortDateOrDateTime(String ...dateFields){
+    public static TreeMap<Integer, HashMap<String,DateTime>> getSortDateOrDateTime(String tableName,String ...dateFields){
         DbForFieldDefinition dbForEnum = new DbForFieldDefinition();
-        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition();
+        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition(tableName);
         TreeMap<Integer, HashMap<String, DateTime>> returnTreeMap=null;
         // 对数据库中是日期加时间(datetime) 进行计数 如果和形参 参数相同 则是全部为datetime 如果为0 则是全部为date
         // 如果卡在形参个数与0之间 则是datetime与date的混合比较
@@ -82,19 +82,19 @@ public class TimeUtils {
         if (iDateOrDateTime==dateFields.length){
 
 
-            returnTreeMap = getSortDateTime(dateFields);
+            returnTreeMap = getSortDateTime(tableName,dateFields);
         }else if (iDateOrDateTime==0){
-            returnTreeMap=getSortDate(dateFields);
+            returnTreeMap=getSortDate(tableName,dateFields);
         }else {
-           returnTreeMap=getSortDateAndDateTime(dateFields);
+           returnTreeMap=getSortDateAndDateTime(tableName,dateFields);
         }
 //     System.out.println("++++"+returnTreeMap);
         return returnTreeMap;
     }
-    public static TreeMap<Integer, HashMap<String,DateTime>> getSortDateAndDateTime(String[] dateFields) {
+    public static TreeMap<Integer, HashMap<String,DateTime>> getSortDateAndDateTime(String tableName,String[] dateFields) {
         TreeMap<Integer, HashMap<String, DateTime>> integerHashMapTreeMapDateTimeAndDate = new TreeMap<>();
         DbForFieldDefinition dbForEnum = new DbForFieldDefinition();
-        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition();
+        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition(tableName);
         ArrayList<DateTime> dateTimes = new ArrayList<>();
         for (String u:dateFields){
             for (JSONObject s:allFieldDefinition) {
@@ -127,11 +127,11 @@ public class TimeUtils {
 // System.out.println(integerHashMapTreeMapDateTimeAndDate);
         return integerHashMapTreeMapDateTimeAndDate;
     }
-    public static TreeMap<Integer, HashMap<String,DateTime>> getSortDateTime(String[] dateFields){
+    public static TreeMap<Integer, HashMap<String,DateTime>> getSortDateTime(String tableName,String[] dateFields){
         TreeMap<Integer, HashMap<String, DateTime>> integerHashMapTreeMapDateTime = new TreeMap<>();
         //Integer 存该字段所在下标
         DbForFieldDefinition dbForEnum = new DbForFieldDefinition();
-        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition();
+        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition(tableName);
         ArrayList<DateTime> dateTimes = new ArrayList<>();
         for (String s:dateFields){
             dateTimes.add(getDateTime());
@@ -154,11 +154,11 @@ public class TimeUtils {
 //        System.out.println("com.cc.TimeUtils.getSortDateTime---130----->"+integerHashMapTreeMapDateTime);
         return  integerHashMapTreeMapDateTime;
     }
-    public static TreeMap<Integer, HashMap<String,DateTime>> getSortDate(String[] dateFields){
+    public static TreeMap<Integer, HashMap<String,DateTime>> getSortDate(String tableName,String[] dateFields){
         TreeMap<Integer, HashMap<String, DateTime>> integerHashMapTreeMapDate = new TreeMap<>();
         //Integer 存该字段所在下标
         DbForFieldDefinition dbForEnum = new DbForFieldDefinition();
-        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition();
+        ArrayList<JSONObject> allFieldDefinition = dbForEnum.getAllFieldDefinition(tableName);
         ArrayList<DateTime> dateTimes = new ArrayList<>();
         for (String s:dateFields){
             dateTimes.add(getDate());
