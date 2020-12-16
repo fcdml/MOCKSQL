@@ -1,4 +1,4 @@
-package com.cc;
+package com.cc.code.Definition;
 
 /**
  * @Classname FieldDefinition

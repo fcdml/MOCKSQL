@@ -1,4 +1,4 @@
-package com.cc;
+package com.cc.code.connectionUtils;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import java.sql.Connection;

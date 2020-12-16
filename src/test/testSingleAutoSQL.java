@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  */
 public class testSingleAutoSQL {
     public static void main(String[] args) throws ClassNotFoundException {
-//        com.cc.AutoSingleSQL autoSQL = new com.cc.AutoSingleSQL(com.cc.FORJDBC.class,6);
+//        com.cc.AutoAllSQL.AutoSingleSQL autoSQL = new com.cc.AutoAllSQL.AutoSingleSQL(com.cc.FORJDBC.class,6);
 //        Field[] declaredFields1 = Class.forName("com.cc.FORJDBC").getDeclaredFields();
 //        Field[] declaredFields = Class.forName("com.").getDeclaredFields();
 //        System.out.println(Arrays.toString(declaredFields));

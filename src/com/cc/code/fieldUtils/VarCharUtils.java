@@ -1,4 +1,4 @@
-package com.cc;
+package com.cc.code.fieldUtils;
 
 import java.util.Random;
 

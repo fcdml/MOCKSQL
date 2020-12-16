@@ -1,6 +1,7 @@
-package com.cc;
+package com.cc.code.fieldUtils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cc.code.Definition.DbForFieldDefinition;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -151,7 +152,7 @@ public class TimeUtils {
             }
             i++;
         }
-//        System.out.println("com.cc.TimeUtils.getSortDateTime---130----->"+integerHashMapTreeMapDateTime);
+//        System.out.println("com.cc.fieldUtils.TimeUtils.getSortDateTime---130----->"+integerHashMapTreeMapDateTime);
         return  integerHashMapTreeMapDateTime;
     }
     public static TreeMap<Integer, HashMap<String,DateTime>> getSortDate(String tableName,String[] dateFields){
@@ -178,7 +179,7 @@ public class TimeUtils {
             }
             i++;
         }
-//        System.out.println("com.cc.TimeUtils.getSortDate---96----->"+integerHashMapTreeMapDate);
+//        System.out.println("com.cc.fieldUtils.TimeUtils.getSortDate---96----->"+integerHashMapTreeMapDate);
         return  integerHashMapTreeMapDate;
     }
     private static void ListSort(List<DateTime> list) {

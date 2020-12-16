@@ -1,7 +1,7 @@
 package test;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cc.DbForFieldDefinition;
+import com.cc.code.Definition.DbForFieldDefinition;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,6 @@
 package test;
 
-import com.cc.AutoSingleSQL;
+import com.cc.code.autoAllSQL.AutoSingleSQL;
 
 /**
  * @Classname testSingleAutoSQLDemo
@@ -11,7 +11,7 @@ import com.cc.AutoSingleSQL;
 public class testSingleAutoSQLDemo {
     public static void main(String[] args) {
         //deptsome forjdbc
-        AutoSingleSQL forjdbc = new AutoSingleSQL("employee", 10);
+        AutoSingleSQL forjdbc = new AutoSingleSQL("forjdbc", 100);
         forjdbc.autoInsertS();
 //        forjdbc.autoInsertS("createdate","enddate","afterdate","mydate","aa","bb","cc","dd");
     }

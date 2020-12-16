@@ -1,15 +1,15 @@
-package com.cc;
+package com.cc.code.autoAllUtils.MiddleTableUtils;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.cc.code.Definition.DbForFieldDefinition;
+import com.cc.code.connectionUtils.SQLUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import static com.cc.DruidUtils.getConnection;
-import static com.cc.SQLUtils.getDBConnection;
 
 /**
  * @Classname AutoMiddleUtils
@@ -23,15 +23,15 @@ public class AutoMiddleUtils{
       Connection dbConnection =null;
       PreparedStatement preparedStatement =null;
       try {
-          dbConnection = getDBConnection();
+          dbConnection = SQLUtils.getDBConnection();
           String selectSql="select "+columnName+" from "+tableName;
           preparedStatement = dbConnection.prepareStatement(selectSql);
           ResultSet resultSet = preparedStatement.executeQuery();
           DbForFieldDefinition dbForFieldDefinition = new DbForFieldDefinition();
           String singleFieldDefinition = dbForFieldDefinition.getSingleFieldDefinition(tableName, columnName);
-          ArrayList<Integer> integers = new ArrayList<>();
-          ArrayList<String> varcharList = new ArrayList<>();
-          ArrayList<String> enumList = new ArrayList<>();
+          JSONArray  integers  = new JSONArray();
+          JSONArray varcharList = new JSONArray();
+          JSONArray enumList = new JSONArray();
           JSONObject jsonObject = new JSONObject();
           if ("int".equals(singleFieldDefinition)){
                 while (resultSet.next()) {

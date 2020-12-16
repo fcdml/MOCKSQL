@@ -1,6 +1,7 @@
-package com.cc;
+package com.cc.code.Definition;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cc.code.connectionUtils.SQLUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.cc.SQLUtils.getDBConnection;
+import static com.cc.code.connectionUtils.SQLUtils.getDBConnection;
 
 /**
  * @Classname DbForFieldDefinition
@@ -45,29 +46,29 @@ public class DbForFieldDefinition {
                         .fluentPut("characterMaximumLength", execute.getInt(4))
                         .fluentPut("columnType", execute.getString(5));
                 if (execute.getString(5).contains("enum")) {
-                    System.out.println("==+++++===="+execute.getString(5));
+//                    System.out.println("==+++++===="+execute.getString(5));
                     ArrayList<String> strings = new ArrayList<>();
 //                System.out.println("====="+execute.getString(2));
                     matcher = compile.matcher(execute.getString(5));
-                   System.out.println("iiiiiiiii"+execute.getString(5));
+//                   System.out.println("iiiiiiiii"+execute.getString(5));
                     int u=0;
                     while (matcher.find()) {
                         u++;
                         String[] split = matcher.group().split(",");
-                        System.out.println("LLLLLLL"+split);
-                        System.out.println(split.length);
+//                        System.out.println("LLLLLLL"+split);
+//                        System.out.println(split.length);
                         for (int j = 0; j <split.length ; j++) {
-                            System.out.println("ZZZZZZ"+split[i].substring(1,split[i].length()-1));
+//                            System.out.println("ZZZZZZ"+split[i].substring(1,split[i].length()-1));
                             strings.add(split[j].substring(1,split[j].length()-1));
                         }
                     }
-                    System.out.println("u--->"+u);
-                    System.out.println(strings);
+//                    System.out.println("u--->"+u);
+//                    System.out.println(strings);
                     jsonObject.put("columnType", strings);
                 }
                 allJsonObject.add(jsonObject);
             }
-            System.out.println("allJsonObject----->"+allJsonObject);
+//            System.out.println("allJsonObject----->"+allJsonObject);
         } catch (ClassNotFoundException e) {
             System.out.println("数据库的驱动校验失败!");
         } catch (SQLException throwables) {

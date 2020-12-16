@@ -1,6 +1,7 @@
-package com.cc;
+package com.cc.code.connectionUtils;
 
 import java.sql.*;
+import java.util.HashSet;
 
 /**
  * @Classname SQLUtils
@@ -73,12 +74,13 @@ public class SQLUtils {
      * @param statement  预编译对象
      */
     public static void release(Connection conn, Statement statement) {
-
+        HashSet<Object> objects = new HashSet<>();
         try {
             if(statement != null) {
                 statement.close();
             }
             if(conn !=null) {
+//                conn.commit();
                 conn.close();
             }
         } catch (SQLException e) {
