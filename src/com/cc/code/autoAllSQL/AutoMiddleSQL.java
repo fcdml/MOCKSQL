@@ -135,7 +135,6 @@ public class AutoMiddleSQL{
                         preparedStatement.setString(k++,o);
                     }
                 }
-
              preparedStatement.executeUpdate();
                 System.out.println("已生成编号为"+i+"的数据");
             }

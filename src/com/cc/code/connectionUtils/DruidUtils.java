@@ -15,16 +15,18 @@ import java.util.Properties;
  */
 public class DruidUtils {
     private static DruidDataSource dataSource = null;  // druid数据源
+//   private static String jdbcUrl=null;
+//   private static String username=null;
+//   private static String password=null;
 
 
-    static {
-
-        Properties props = new Properties();
+    public  static void initSource (String jdbcUrl,String username,String password ){
         try {
             String driverClassName = "com.mysql.cj.jdbc.Driver";
-            String jdbcUrl ="jdbc:mysql://localhost:3306/mocksql?useSSL=false&characterEncoding=utf8&serverTimeZone=GMT+8";
-            String username ="root";
-            String password = "mysql9614";
+//            String jdbcUrl ="jdbc:mysql://localhost:3306/mocksql?useSSL=false&characterEncoding=utf8&serverTimeZone=GMT+8&allowMultiQueries=true&rewriteBatchedStatements=true";
+//            String username ="root";
+//            String password = "mysql9614";
+//            initsource initsource = new initsource();
             int initialSize = 10;
             int maxActive =  50;
             //创建并初始化数据库连接池 DruidDataSource
@@ -35,6 +37,7 @@ public class DruidUtils {
             dataSource.setPassword(password); // 配置数据库密码
             dataSource.setInitialSize(initialSize);  // 配置数据库连接池的初始化连接数量
             dataSource.setMaxActive(maxActive); // 配置数据库连接池最大活跃的连接数量
+            System.out.println("3333333333");
         } catch (Exception e) {
             e.printStackTrace();
         }
