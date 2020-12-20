@@ -7,6 +7,7 @@ import com.mysql.cj.xdevapi.JsonParser;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * @Classname testMethod
@@ -16,6 +17,9 @@ import java.util.Collections;
  */
 public class testMethod {
     public static void main(String[] args) {
+    test2();
+    }
+    public  static void test1(){
         ArrayList<String> strings = new ArrayList<>();
         strings.add("1");
         strings.add("2");
@@ -23,13 +27,13 @@ public class testMethod {
         strings.add("4");
         strings.add("5");
         strings.add("6");
-         strings.forEach(System.out::print);
+        strings.forEach(System.out::print);
 //        System.out.println();
         Collections.shuffle(strings);
         strings.forEach(System.out::print);
         strings.toArray();
         JSONObject jsonObject = new JSONObject();
-            jsonObject.put("2",strings);
+        jsonObject.put("2",strings);
         ArrayList<String> o = (ArrayList<String>)jsonObject.get("2");
 //        o.forEach(System.out::print);
 //        JSONObject jsonObject1 = jsonObject.
@@ -43,6 +47,19 @@ public class testMethod {
             System.out.println(key+"===="+value);
 //            System.out.println(value);
         });
+
+    }
+    public static void test2(){
+        ArrayList<String> strings1 = new ArrayList<>();
+        strings1.add("arr1");
+        strings1.add("arr2");
+        HashMap<String, Object> stringStringHashMap = new HashMap<>();
+           stringStringHashMap.put("11",strings1);
+        ArrayList<String> o = (ArrayList<String>)stringStringHashMap.get("11");
+        System.out.println(o);
+
+
+        //        System.out.println(b);
 
     }
 }

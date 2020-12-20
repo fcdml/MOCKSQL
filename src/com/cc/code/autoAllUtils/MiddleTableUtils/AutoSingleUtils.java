@@ -13,6 +13,8 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @Classname AutoSingleUtils
  * @Description TODO
@@ -80,8 +82,8 @@ return true;
   public static  String getAllSymbol(Integer i,Integer allNum){
     return i.equals(allNum) ?";":",";
   }
-  public static  String getSingleValue( Integer j,String[] dateFields,ArrayList<String> temporaryList,String tableName,Integer tableFieldNum){
-
+  public static  String getSingleValue(ConcurrentHashMap<String, Object> allVal, Integer j, String[] dateFields, ArrayList<String> temporaryList, String tableName, Integer tableFieldNum){
+    System.out.println(allVal+"------");
     //    JSONObject jsonObject = new JSONObject();
     boolean hh=false;
     Boolean datetimeFlagX=false;
@@ -96,8 +98,6 @@ return true;
         Random random1 = new Random();
         ArrayList<String> columnType =FieldDefinitionUtils.getColumnType(tableName,i);
             begin+="'"+columnType.get(random1.nextInt(columnType.size()))+"'"+getSingleValueSymbol(i,tableFieldNum);
-        //         jsonObject.put(String.valueOf(i),columnType.get(random1.nextInt(columnType.size())));
-         //          preparedStatement.setString(i,columnType.get(random1.nextInt(columnType.size())));
           hh=true;
       }
       if (hh){
@@ -106,12 +106,10 @@ return true;
       }
       if (i == 1 && ("int".equals(typeName) || "Integer".equals(typeName))) {
         begin+=String.valueOf(j)+getSingleValueSymbol(i,tableFieldNum);
-//        preparedStatement.setString(i, String.valueOf(j));
         continue;
       }
       if ("varchar".equals(typeName)) {
         begin+="'"+VarCharUtils.getRandomString(6)+"'"+getSingleValueSymbol(i,tableFieldNum);
-//        preparedStatement.setString(i, VarCharUtils.getRandomString(6));
         continue;
       }
       if ("datetime".equals(typeName)&&temporaryList.contains(FieldDefinitionUtils.getColumnName(tableName,i))||"date".equals(typeName)&&temporaryList.contains(FieldDefinitionUtils.getColumnName(tableName,i))){
@@ -125,11 +123,9 @@ return true;
               testDateTimes.put(FieldDefinitionUtils.getColumnName(tableName,i),value.get(FieldDefinitionUtils.getColumnName(tableName,i)));
               if ("datetime".equals(typeName)){
                 begin+="'"+(new Timestamp(value.get(FieldDefinitionUtils.getColumnName(tableName,i)).getMillis()))+"'"+getSingleValueSymbol(i,tableFieldNum);
-//                preparedStatement.setTimestamp(i,new Timestamp(value.get(FieldDefinitionUtils.getColumnName(tableName,i)).getMillis()));
                 datetimeFlagX=true;
               }else if ("date".equals(typeName)){
                 begin+="'"+(new Date(value.get(FieldDefinitionUtils.getColumnName(tableName,i)).getMillis()))+"'"+getSingleValueSymbol(i,tableFieldNum);
-//                preparedStatement.setDate(i,new Date(value.get(FieldDefinitionUtils.getColumnName(tableName,i)).getMillis()));
                 dateFlagX=true;
               }
               temporaryFlag=true;
@@ -147,11 +143,18 @@ return true;
         }
       }
       if ("datetime".equals(typeName)){
-//                        System.out.println(2222);
         if (datetimeFlagX){
           continue;
         }
-        begin+="'"+(new Timestamp(TimeUtils.getDateTime().getMillis()))+"'"+getSingleValueSymbol(i,tableFieldNum);
+        if (allVal.get("setAutoDateTimeInterval")!=null){
+          ArrayList<String> setAutoDateTimeInterval = (ArrayList<String>)allVal.get("setAutoDateTimeInterval");
+          if (setAutoDateTimeInterval.get(0).equals(FieldDefinitionUtils.getColumnName(tableName,i))){
+            DateTime datTimeByInterval = TimeUtils.getDatTimeByInterval(setAutoDateTimeInterval.get(1), setAutoDateTimeInterval.get(2));
+            begin += "'" + (new Timestamp(datTimeByInterval.getMillis())) + "'" + getSingleValueSymbol(i, tableFieldNum);
+          }
+        }else {
+          begin+="'"+(new Timestamp(TimeUtils.getDateTime().getMillis()))+"'"+getSingleValueSymbol(i,tableFieldNum);
+        }
 //        preparedStatement.setTimestamp(i,  new Timestamp(TimeUtils.getDateTime().getMillis()));
         continue;
       }
@@ -171,5 +174,97 @@ return true;
       System.out.println("AutoSingleUtils.getSingleValue  begin="+begin);
     }
     return begin;
+  }
+  public static  String getSingleValueNoRelation(ConcurrentHashMap<String, Object> allVal, Integer j, String tableName, Integer tableFieldNum){
+    System.out.println(allVal+"------");
+    //    JSONObject jsonObject = new JSONObject();
+    boolean hh=false;
+    Boolean datetimeFlagX=false;
+    Boolean dateFlagX=false;
+    HashMap<String, DateTime> testDateTimes = new HashMap<>();
+    String begin="(";
+    for (int i = 1; i <= tableFieldNum; i++) {
+      String typeName=FieldDefinitionUtils.getDataType(tableName,i);
+      Boolean anEnum = EnumUtils.isEnum(tableName,i);
+      if (anEnum){
+        Random random1 = new Random();
+        ArrayList<String> columnType =FieldDefinitionUtils.getColumnType(tableName,i);
+            begin+="'"+columnType.get(random1.nextInt(columnType.size()))+"'"+getSingleValueSymbol(i,tableFieldNum);
+          hh=true;
+      }
+      if (hh){
+        hh=false;
+        continue;
+      }
+      if (i == 1 && ("int".equals(typeName) || "Integer".equals(typeName))) {
+        begin+=String.valueOf(j)+getSingleValueSymbol(i,tableFieldNum);
+        continue;
+      }
+      if ("varchar".equals(typeName)) {
+        begin+="'"+VarCharUtils.getRandomString(6)+"'"+getSingleValueSymbol(i,tableFieldNum);
+        continue;
+      }
+      if ("datetime".equals(typeName)){
+        if (datetimeFlagX){
+          continue;
+        }
+        if (allVal.containsKey(FieldDefinitionUtils.getColumnName(tableName,i))){
+          ArrayList<String> s=(ArrayList<String>)allVal.get(FieldDefinitionUtils.getColumnName(tableName,i));
+            DateTime datTimeByInterval = TimeUtils.getDatTimeByInterval(s.get(0), s.get(1));
+            begin += "'" + (new Timestamp(datTimeByInterval.getMillis())) + "'" + getSingleValueSymbol(i, tableFieldNum);
+        }else {
+          begin+="'"+(new Timestamp(TimeUtils.getDateTime().getMillis()))+"'"+getSingleValueSymbol(i,tableFieldNum);
+        }
+//        preparedStatement.setTimestamp(i,  new Timestamp(TimeUtils.getDateTime().getMillis()));
+        continue;
+      }
+      if ("date".equals(typeName)){
+        if (dateFlagX){
+          continue;
+        }
+        begin+="'"+(new Date(TimeUtils.getDate().getMillis()))+"'"+getSingleValueSymbol(i,tableFieldNum);
+//        preparedStatement.setDate(i,  new Date(TimeUtils.getDate().getMillis()));
+        continue;
+      }
+      if ("double".equals(typeName)){
+        continue;
+      }
+    }
+    if (j==1){
+      System.out.println("AutoSingleUtils.getSingleValue  begin="+begin);
+    }
+    return begin;
+  }
+  public static DateTime getDateTime(String needDateTime){
+    if (needDateTime.contains("T")){
+      DateTime dateTime = new DateTime(needDateTime);
+      return dateTime;
+    }
+    if (needDateTime.contains(" ")){
+      String[] s = needDateTime.split(" ");
+      System.out.println("s--------"+Arrays.toString(s));
+      System.out.println(s[0]+"T"+s[1]);
+   return  new DateTime(s[0]+"T"+s[1]);
+    }
+    return null;
+  }
+  public static String[] getStringDateTime(String needDateTime){
+    if (needDateTime.contains("T")){
+      String[] ts = needDateTime.split("T");
+      return ts;
+    }
+    if (needDateTime.contains(" ")){
+      String[] s = needDateTime.split(" ");
+      return s;
+    }
+    return null;
+  }
+  public static String[] getStringSplitDate(String needDate){
+    String[] split = needDate.split("-");
+    return split;
+  }
+  public static String[] getStringSplitTime(String needTime){
+    String[] split = needTime.split(":");
+    return split;
   }
 }

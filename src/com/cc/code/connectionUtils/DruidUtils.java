@@ -23,10 +23,6 @@ public class DruidUtils {
     public  static void initSource (String jdbcUrl,String username,String password ){
         try {
             String driverClassName = "com.mysql.cj.jdbc.Driver";
-//            String jdbcUrl ="jdbc:mysql://localhost:3306/mocksql?useSSL=false&characterEncoding=utf8&serverTimeZone=GMT+8&allowMultiQueries=true&rewriteBatchedStatements=true";
-//            String username ="root";
-//            String password = "mysql9614";
-//            initsource initsource = new initsource();
             int initialSize = 10;
             int maxActive =  50;
             //创建并初始化数据库连接池 DruidDataSource

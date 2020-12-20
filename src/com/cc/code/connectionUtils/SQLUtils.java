@@ -56,6 +56,7 @@ public class SQLUtils {
 //            System.out.println(tableName);
             Connection dbConnection = getDBConnection();
             String maxLineSQL="select count(*) from "+tableName;
+            System.out.println("maxLineSQL-------"+maxLineSQL);
             PreparedStatement preparedStatementNum = dbConnection.prepareStatement(maxLineSQL);
             ResultSet  allnum = preparedStatementNum.executeQuery(maxLineSQL);
             while (allnum.next()){
