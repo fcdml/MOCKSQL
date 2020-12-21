@@ -3,7 +3,7 @@
 - AutoSingleSQL类的构造传参 需要提供表名 生成的条数
 - AutoSingleSQL类中autoInsertAll无参方法 按默认配置进行随机生成数据
 - AutoSingleSQL类中autoInsertAll有参方法 提供数据中需要有序生成的日期字段或者时间戳 按从小到大进行传参 string类型的参数
-- 先支持的数据库字段 varchar datetime datime id自动递增
+- 先支持的数据库字段 varchar datetime date id自动递增
 - 代码示例
 > 下面例子在testAutoSingleSQLDemo中 先运行forjdbc.sql 生成表 再进行测试
 ```java
