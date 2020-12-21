@@ -17,9 +17,9 @@
 ```java
           字段名如:somedatetime
           日期或时间或时间戳区间:"2020-1-1:00:00:11"到"2020-1-2 8:1:1"
-        AutoSingleSQL forjdbc = new AutoSingleSQL("forjdbc", 10000);//forjdbc表中生成10000条数据
-        forjdbc..setAutoDateTimeInterval("somedatetime","2020-1-1:00:00:11","2020-1-2 8:1:1");
-         forjdbc.autoInsertAllNoRelation();
+          AutoSingleSQL forjdbc = new AutoSingleSQL("forjdbc", 10000);//forjdbc表中生成10000条数据
+          forjdbc..setAutoDateTimeInterval("somedatetime","2020-1-1:00:00:11","2020-1-2 8:1:1");
+          forjdbc.autoInsertAllNoRelation();
 ```
 
  
