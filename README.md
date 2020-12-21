@@ -7,6 +7,19 @@
 - 代码示例
 > 下面例子在testAutoSingleSQLDemo中 先运行forjdbc.sql 生成表 再进行测试
 ```java
-        AutoSingleSQL forjdbc = new AutoSingleSQL("forjdbc", 10000);//forjdbc表中生成10000条数据
-        forjdbc.autoInsertS("createdate","enddate","afterdate","aa","bb","cc","dd");
+       DruidUtils.initSource("jdbcurl",
+                             "数据库用户名","数据库密码");
 ```
+```java
+        AutoSingleSQL forjdbc = new AutoSingleSQL("forjdbc", 10000);//forjdbc表中生成10000条数据
+        forjdbc.autoInsertAll("createdate","enddate","afterdate","aa","bb","cc","dd");
+```
+```java
+          字段名如:somedatetime
+          日期或时间或时间戳区间:"2020-1-1:00:00:11"到"2020-1-2 8:1:1"
+        AutoSingleSQL forjdbc = new AutoSingleSQL("forjdbc", 10000);//forjdbc表中生成10000条数据
+        forjdbc..setAutoDateTimeInterval("somedatetime","2020-1-1:00:00:11","2020-1-2 8:1:1");
+         forjdbc.autoInsertAllNoRelation();
+```
+
+ 

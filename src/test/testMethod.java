@@ -17,7 +17,8 @@ import java.util.HashMap;
  */
 public class testMethod {
     public static void main(String[] args) {
-    test2();
+        test3();
+//    test2();
     }
     public  static void test1(){
         ArrayList<String> strings = new ArrayList<>();
@@ -61,5 +62,12 @@ public class testMethod {
 
         //        System.out.println(b);
 
+    }
+    public static void test3(){
+        String i="1";
+        String i1="1";
+        String j="2";
+        System.out.println((i.compareTo(i1)));
+        System.out.println(j.compareTo(i));
     }
 }

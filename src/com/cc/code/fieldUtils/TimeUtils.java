@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.cc.code.Definition.DbForFieldDefinition;
 import com.cc.code.autoAllUtils.MiddleTableUtils.AutoSingleUtils;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -300,66 +303,82 @@ public class TimeUtils {
         return " " + randomHour + ":" + randomMinutes + ":" + randomSeconds;
     }
 
-    public static DateTime getDatTimeByInterval(String beginDateTime, String endDateTime) {
-        System.out.println("beginDateTime = " + beginDateTime + ", endDateTime = " + endDateTime);
-        String[] stringBeginDateTime = AutoSingleUtils.getStringDateTime(beginDateTime);
-        String[] stringBeginSplitDate = AutoSingleUtils.getStringSplitDate(stringBeginDateTime != null ? stringBeginDateTime[0] : null);
-        String[] stringBeginSplitTime = AutoSingleUtils.getStringSplitTime(stringBeginDateTime != null ? stringBeginDateTime[1] : null);
-        String[] stringEndDateTime = AutoSingleUtils.getStringDateTime(endDateTime);
-        String[] stringEndSplitDate = AutoSingleUtils.getStringSplitDate(stringEndDateTime != null ? stringEndDateTime[0] : null);
-        String[] stringEndSplitTime = AutoSingleUtils.getStringSplitTime(stringEndDateTime != null ? stringEndDateTime[1] : null);
-        Integer year = getNumber(Integer.valueOf(stringBeginSplitDate[0]), Integer.valueOf(stringEndSplitDate[0]));
-        String beginRandomDateTime ="";
-        if (year > Integer.parseInt(stringBeginSplitDate[0]) && year < Integer.parseInt(stringEndSplitDate[0])) {
-            beginRandomDateTime += year;
-            System.out.println("++++++++++"+beginRandomDateTime);
-            Integer randomMonth = getRandomMonth();
-            beginRandomDateTime += "-" + randomMonth + "-" + getRandomDay(year,randomMonth);
-            beginRandomDateTime+=" "+getHMS();
-        }else if (year.equals(Integer.parseInt(stringBeginSplitDate[0]))){
-            System.out.println("((((((((((((((((((");
-            beginRandomDateTime += year;
-            Random random = new Random();
-            Integer currentMonth = Integer.valueOf(stringBeginSplitDate[1]);
-            Integer randomMonth =1+random.nextInt(currentMonth);
-            beginRandomDateTime+="-"+randomMonth;
-            if (randomMonth.equals(currentMonth)){
-                int randomDay = getRandomDay(year, randomMonth, Integer.parseInt(stringEndSplitDate[2]), 1);
-                if (randomDay==Integer.parseInt(stringEndSplitDate[2])){
-                    beginRandomDateTime+="-"+randomDay;
-                }
-                beginRandomDateTime+="-"+getRandomDay(year,randomMonth,Integer.parseInt(stringEndSplitDate[2]),1);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               beginRandomDateTime+=getHMS( stringBeginSplitTime ,true);
-             }else {
-                beginRandomDateTime+="-"+ getRandomDay(year,randomMonth);
-                beginRandomDateTime+=getHMS();
-             }
-        }else if (year.equals(Integer.parseInt(stringEndSplitDate[0]))){
-            System.out.println(")))))))))))))))))))))))");
-            beginRandomDateTime += year;
-            Random random = new Random();
-            Integer currentMonth = Integer.valueOf(stringEndSplitDate[1]);
-            Integer randomMonth =1+random.nextInt(currentMonth);
-            beginRandomDateTime+="-"+randomMonth;
-            if (randomMonth.equals(currentMonth)){
-                beginRandomDateTime+="-"+getRandomDay(year,randomMonth,Integer.parseInt(stringEndSplitDate[2]),-1);
-                beginRandomDateTime+=getHMS( stringBeginSplitTime ,false);
-            }else {
-                beginRandomDateTime+="-"+ getRandomDay(year,randomMonth);
-                beginRandomDateTime+=getHMS();
-            }
+    public static DateTime getDatTimeByInterval(String beginDateTime, String endDateTime) throws Exception {
+        DateTime beginDateTimeI = null;
+        DateTime endDateTimeI = null;
+        try {
+            beginDateTimeI = new DateTime(getDateTimeFormat(beginDateTime));
+            endDateTimeI = new DateTime(getDateTimeFormat(endDateTime));
+        } catch (org.joda.time.IllegalFieldValueException e) {
+            System.err.println("传参数时注意平年 闰年 或者日期范围");
+            e.printStackTrace();
         }
-        System.out.println("=============================="+beginRandomDateTime);
-        DateTime  begindateTime= AutoSingleUtils.getDateTime(beginRandomDateTime);
-        return begindateTime;
+        return getRandomDateTime(getSecond(beginDateTimeI.getMillis()),getSecond(endDateTimeI.getMillis()));
     }
-
-    public static DateTime getDateByInterval(String beginDate, String endDate) {
-        DateTime begindateTime = AutoSingleUtils.getDateTime(beginDate);
-        DateTime enddateTime = AutoSingleUtils.getDateTime(endDate);
-        return null;
+    public static DateTime getDateByInterval(String beginDate, String endDate) throws Exception {
+        System.out.println("beginDate = " + beginDate + ", endDate = " + endDate);
+        DateTime beginDateI = null;
+        DateTime endDateI = null;
+        try {
+            beginDateI = new DateTime(beginDate);
+            endDateI = new DateTime(endDate);
+            System.out.println("beginDateI = " + beginDateI + ", endDateI = " + endDateI);
+        } catch (org.joda.time.IllegalFieldValueException e) {
+            System.err.println("传参数时注意平年 闰年 或者日期范围");
+            e.printStackTrace();
+        }
+        return getRandomDate( getDay(beginDateI.getMillis()),getDay(endDateI.getMillis()));
     }
-
+//    public static DateTime getDateByInterval(String beginDate, String endDate) {
+//        DateTime begindateTime = AutoSingleUtils.getDateTime(beginDate);
+//        DateTime enddateTime = AutoSingleUtils.getDateTime(endDate);
+//        return null;
+//    }
+    public static String getDateTimeFormat(String a) throws Exception {
+        if (a.contains("T")){
+            return a;
+        }else if (a.contains(" ")){
+            String replace = a.replace(" ", "T");
+            return replace;
+        }else {
+            throw  new Exception("日期格式:yyyy-MM-dd HH:mm:ss 或者yyyy-MM-ddTHH:mm:ss");
+        }
+    }
+    public static DateTime getRandomDateTime(long begin,long end){
+        long v = (long)  (Math.random() * (end - begin + 1)+begin)*1000;
+        System.out.println("begin = " + begin + ", end = " + end);
+        System.out.println("v------"+v);
+        DateTime dateTime =null;
+        try {
+            dateTime = new DateTime(v);
+            System.out.println("dateTime-------->"+dateTime);
+        } catch (org.joda.time.IllegalFieldValueException e) {
+            System.out.println("正在再次生成日期");
+            getRandomDateTime(begin, end);
+        }
+        return dateTime;
+    }
+    public static DateTime getRandomDate(long begin,long end){
+        //REM joda 毫秒转datetime 会少16个小时
+        long v = (long)  ((Math.random() * (end - begin + 1)+begin))*24*60*60*1000+16*60*60*1000;
+        System.out.println("begin = " + begin + ", end = " + end);
+        System.out.println("v------"+v);
+        DateTime dateTime =null;
+        try {
+            dateTime = new DateTime(v);
+            System.out.println("dateTime-------->"+dateTime);
+        } catch (org.joda.time.IllegalFieldValueException e) {
+            System.out.println("正在再次生成日期");
+            getRandomDate(begin, end);
+        }
+        return dateTime;
+    }
+    public static long getDay(long a){
+         return a/(24*60*60*1000);
+    }
+    public static long getSecond(long a){
+         return a/(1000);
+    }
     public static Integer getNumber(Integer begin, Integer end) {
         System.out.println("begin = " + begin + ", end = " + end);
         Random random = new Random();
@@ -372,19 +391,29 @@ public class TimeUtils {
         Integer randomNum = 1 + random.nextInt(12);
         return randomNum;
     }
-
-//    public static void main(String[] args) {
-//        DateTime dateTime = new DateTime();
-//        for (int i = 0; i <1000 ; i++) {
-//            int randomDay = getRandomDay(dateTime, 2);
-//            if (randomDay==0){
-//                System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-//                break;
-//            }
-//            System.out.println(randomDay);
-//        }
-//
-//    }
-
-
+   public static  int getCompare(String a,String b) throws Exception {
+        if (a.contains(" ")||b.contains(" ")){
+            throw new Exception("时间格式不正确 多了空格");
+        }
+        return a.compareTo(b);
+   }
+   public static  int getEquals(Integer a,Integer b) throws Exception {
+        return a.compareTo(b);
+   }
+   // 生成某年或某月等....的随机数
+   public static  int getRandomNum(String a,String b) throws Exception {
+        if (a.contains(" ")||b.contains(" ")){
+            throw new Exception("时间格式不正确 多了空格");
+        }
+      return Integer.parseInt(a)+(new Random()).nextInt(Integer.parseInt(b)-Integer.parseInt(a)+1);
+   }
+public static void main(String[] args) throws ParseException {
+       String a="2020-1-1T12:00:00";
+       String b="2020-1-2";
+    DateTime dateTime1 = new DateTime(a);
+//    System.out.println(dateTime1);
+    //    DateTime dateTime2 = new DateTime(b);
+//    System.out.println( getDay(dateTime1.getMillis())-getDay(dateTime2.getMillis()));
+    System.out.println((new DateTime(getDay(dateTime1.getMillis())*24*60*60*1000+4*60*60*1000)));
+}
 }

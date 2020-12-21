@@ -82,7 +82,7 @@ return true;
   public static  String getAllSymbol(Integer i,Integer allNum){
     return i.equals(allNum) ?";":",";
   }
-  public static  String getSingleValue(ConcurrentHashMap<String, Object> allVal, Integer j, String[] dateFields, ArrayList<String> temporaryList, String tableName, Integer tableFieldNum){
+  public static  String getSingleValue(ConcurrentHashMap<String, Object> allVal, Integer j, String[] dateFields, ArrayList<String> temporaryList, String tableName, Integer tableFieldNum) throws Exception {
     System.out.println(allVal+"------");
     //    JSONObject jsonObject = new JSONObject();
     boolean hh=false;
@@ -175,7 +175,7 @@ return true;
     }
     return begin;
   }
-  public static  String getSingleValueNoRelation(ConcurrentHashMap<String, Object> allVal, Integer j, String tableName, Integer tableFieldNum){
+  public static  String getSingleValueNoRelation(ConcurrentHashMap<String, Object> allVal, Integer j, String tableName, Integer tableFieldNum) throws Exception {
     System.out.println(allVal+"------");
     //    JSONObject jsonObject = new JSONObject();
     boolean hh=false;
@@ -222,7 +222,13 @@ return true;
         if (dateFlagX){
           continue;
         }
-        begin+="'"+(new Date(TimeUtils.getDate().getMillis()))+"'"+getSingleValueSymbol(i,tableFieldNum);
+        if (allVal.containsKey(FieldDefinitionUtils.getColumnName(tableName,i))){
+          ArrayList<String> s=(ArrayList<String>)allVal.get(FieldDefinitionUtils.getColumnName(tableName,i));
+          DateTime datTimeByInterval = TimeUtils.getDateByInterval(s.get(0), s.get(1));
+          begin += "'" + (new Date(datTimeByInterval.getMillis())) + "'" + getSingleValueSymbol(i, tableFieldNum);
+        }else {
+          begin += "'" + (new Date(TimeUtils.getDate().getMillis())) + "'" + getSingleValueSymbol(i, tableFieldNum);
+        }
 //        preparedStatement.setDate(i,  new Date(TimeUtils.getDate().getMillis()));
         continue;
       }
