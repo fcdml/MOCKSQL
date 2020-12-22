@@ -1,6 +1,4 @@
 package com.cc.code.autoAllUtils.MiddleTableUtils;
-
-import com.alibaba.fastjson.JSONObject;
 import com.cc.code.Definition.FieldDefinitionUtils;
 import com.cc.code.connectionUtils.SQLUtils;
 import com.cc.code.fieldUtils.EnumUtils;
@@ -10,7 +8,6 @@ import org.joda.time.DateTime;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -77,6 +74,7 @@ return true;
     return i.equals(tableFieldNum) ?"\n":",";
   }
   public static  String getSingleValueSymbol(Integer i,Integer tableFieldNum){
+
     return i.equals(tableFieldNum) ?")":",";
   }
   public static  String getAllSymbol(Integer i,Integer allNum){
@@ -106,6 +104,12 @@ return true;
       }
       if (i == 1 && ("int".equals(typeName) || "Integer".equals(typeName))) {
         begin+=String.valueOf(j)+getSingleValueSymbol(i,tableFieldNum);
+        continue;
+      }
+
+
+      if ("varchar".equals(typeName)) {
+        begin+="'"+VarCharUtils.getRandomString(6)+"'"+getSingleValueSymbol(i,tableFieldNum);
         continue;
       }
       if ("varchar".equals(typeName)) {
@@ -176,34 +180,64 @@ return true;
     return begin;
   }
   public static  String getSingleValueNoRelation(ConcurrentHashMap<String, Object> allVal, Integer j, String tableName, Integer tableFieldNum) throws Exception {
+    DateTime Timebegin = new DateTime();
+    System.out.println(Timebegin);
     System.out.println(allVal+"------");
     //    JSONObject jsonObject = new JSONObject();
     boolean hh=false;
-    Boolean datetimeFlagX=false;
-    Boolean dateFlagX=false;
+    boolean varcharUUIDFlag=false;
+    boolean datetimeFlagX=false;
+    boolean dateFlagX=false;
     HashMap<String, DateTime> testDateTimes = new HashMap<>();
     String begin="(";
     for (int i = 1; i <= tableFieldNum; i++) {
       String typeName=FieldDefinitionUtils.getDataType(tableName,i);
       Boolean anEnum = EnumUtils.isEnum(tableName,i);
+      DateTime enumdateTime0 = new DateTime();
+      System.err.println("enum---in---"+enumdateTime0);
       if (anEnum){
         Random random1 = new Random();
         ArrayList<String> columnType =FieldDefinitionUtils.getColumnType(tableName,i);
             begin+="'"+columnType.get(random1.nextInt(columnType.size()))+"'"+getSingleValueSymbol(i,tableFieldNum);
           hh=true;
       }
+      DateTime enumdateTime1 = new DateTime();
+      System.err.println("enum---out---"+enumdateTime1);
+      System.err.println("enum---alltime---"+(enumdateTime1.getMillis()-enumdateTime0.getMillis()));
       if (hh){
         hh=false;
         continue;
       }
+      DateTime intdateTime0 = new DateTime();
+      System.err.println("enum---in---"+intdateTime0);
       if (i == 1 && ("int".equals(typeName) || "Integer".equals(typeName))) {
         begin+=String.valueOf(j)+getSingleValueSymbol(i,tableFieldNum);
         continue;
       }
+      DateTime intdateTime1 = new DateTime();
+      System.err.println("int---out---"+intdateTime1);
+      System.err.println("int---alltime---"+(intdateTime1.getMillis()-intdateTime0.getMillis()));
+      DateTime varchardateTime0 = new DateTime();
+      System.err.println("varchar---in---"+varchardateTime0);
       if ("varchar".equals(typeName)) {
-        begin+="'"+VarCharUtils.getRandomString(6)+"'"+getSingleValueSymbol(i,tableFieldNum);
+        if (allVal.containsKey(FieldDefinitionUtils.getColumnName(tableName,i))){
+//          ArrayList<String> s=(ArrayList<String>)allVal.get(FieldDefinitionUtils.getColumnName(tableName,i));
+          DateTime dateTime11 = new DateTime();
+          System.out.println("beginuuid  "+dateTime11);
+          begin += "'" + UUID.randomUUID()+ "'" + getSingleValueSymbol(i, tableFieldNum);
+          DateTime dateTime22 = new DateTime();
+          System.out.println("enduuid  "+dateTime22);
+          System.out.println("allUUIDTIME  "+(dateTime22.getMillis()-dateTime11.getMillis()));
+        }else {
+          begin += "'" + VarCharUtils.getRandomString(6) + "'" + getSingleValueSymbol(i, tableFieldNum);
+        }
+        DateTime varchardateTime1 = new DateTime();
+        System.err.println("varchar---out---"+varchardateTime1);
+        System.err.println("varchar---alltime+++++++++++++---"+(varchardateTime1.getMillis()-varchardateTime0.getMillis()));
         continue;
       }
+      DateTime datetimedateTime0 = new DateTime();
+      System.err.println("datetime---in---"+datetimedateTime0);
       if ("datetime".equals(typeName)){
         if (datetimeFlagX){
           continue;
@@ -215,9 +249,14 @@ return true;
         }else {
           begin+="'"+(new Timestamp(TimeUtils.getDateTime().getMillis()))+"'"+getSingleValueSymbol(i,tableFieldNum);
         }
+        DateTime datetimedateTime1 = new DateTime();
+        System.err.println("datetime---out---"+datetimedateTime1);
+        System.err.println("datetime---alltime---"+(datetimedateTime1.getMillis()-datetimedateTime0.getMillis()));
 //        preparedStatement.setTimestamp(i,  new Timestamp(TimeUtils.getDateTime().getMillis()));
         continue;
       }
+      DateTime datedateTime0 = new DateTime();
+      System.err.println("date---in---"+datedateTime0);
       if ("date".equals(typeName)){
         if (dateFlagX){
           continue;
@@ -229,6 +268,9 @@ return true;
         }else {
           begin += "'" + (new Date(TimeUtils.getDate().getMillis())) + "'" + getSingleValueSymbol(i, tableFieldNum);
         }
+        DateTime datedateTime1 = new DateTime();
+        System.err.println("date---out---"+datedateTime1);
+        System.err.println("date---alltime---"+(datedateTime1.getMillis()-datedateTime0.getMillis()));
 //        preparedStatement.setDate(i,  new Date(TimeUtils.getDate().getMillis()));
         continue;
       }
@@ -239,6 +281,8 @@ return true;
     if (j==1){
       System.out.println("AutoSingleUtils.getSingleValue  begin="+begin);
     }
+    DateTime Timeend = new DateTime();
+    System.err.println("one Millis---->"+(Timeend.getMillis()-Timebegin.getMillis()));
     return begin;
   }
   public static DateTime getDateTime(String needDateTime){

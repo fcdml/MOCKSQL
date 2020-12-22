@@ -175,4 +175,10 @@ public class AutoSingleSQL {
         System.out.println("columnDName======="+stringDate.get(0));
         allVal.put(columnNameDate,stringDate);
     }
+    public void setAutoUUIDInterval(String columnNameDate){
+        ArrayList<String> stringDate = new ArrayList<>();
+        stringDate.add("-");
+        System.out.println("columnDName======="+stringDate.get(0));
+        allVal.put(columnNameDate,stringDate);
+    }
 }

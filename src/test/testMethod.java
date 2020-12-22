@@ -1,13 +1,15 @@
 package test;
-
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONPatch;
 import com.mysql.cj.xdevapi.JsonParser;
-
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * @Classname testMethod
@@ -17,7 +19,7 @@ import java.util.HashMap;
  */
 public class testMethod {
     public static void main(String[] args) {
-        test3();
+        test4();
 //    test2();
     }
     public  static void test1(){
@@ -69,5 +71,11 @@ public class testMethod {
         String j="2";
         System.out.println((i.compareTo(i1)));
         System.out.println(j.compareTo(i));
+    }
+    public static void test4(){
+        long l = System.currentTimeMillis();
+        UUID uuid = UUID.randomUUID();
+        long l1 = System.currentTimeMillis();
+        System.out.println(l1-l);
     }
 }
