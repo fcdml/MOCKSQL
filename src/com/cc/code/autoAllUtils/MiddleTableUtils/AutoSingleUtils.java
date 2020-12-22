@@ -106,12 +106,6 @@ return true;
         begin+=String.valueOf(j)+getSingleValueSymbol(i,tableFieldNum);
         continue;
       }
-
-
-      if ("varchar".equals(typeName)) {
-        begin+="'"+VarCharUtils.getRandomString(6)+"'"+getSingleValueSymbol(i,tableFieldNum);
-        continue;
-      }
       if ("varchar".equals(typeName)) {
         begin+="'"+VarCharUtils.getRandomString(6)+"'"+getSingleValueSymbol(i,tableFieldNum);
         continue;
